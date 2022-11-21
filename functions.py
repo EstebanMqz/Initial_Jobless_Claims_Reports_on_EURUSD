@@ -13,7 +13,7 @@ import pandas as pd
 import pandas_datareader as pdr
 import logging as log
 import numpy as np
-from data import *
+
 
 
 

@@ -10,11 +10,11 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import plotly.graph_objects as go #plotly
 import warnings
 import time 
 import plotly.express as px
-from data import *
 
 
 pd.set_option('display.max_rows', None)
