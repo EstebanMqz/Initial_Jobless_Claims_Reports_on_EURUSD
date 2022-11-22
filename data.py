@@ -44,17 +44,18 @@ def read_indicator(indicator,date):
     return ind_raw
     
 
-def fx_rate(pairs, account, pw):
+def fx_rate(pairs, account, pw, timeframe):
     """
-    Function that downloads exchange rates data with MetaTrader 5 api.
+    Function that downloads exchange rates data for given timeframes with MetaTrader 5 api.
 
     Parameters
     ----------
-    + indicator: Economic indicator with Datetime, Actual, Previous and 
-    Consensus estimates values in cols. for its data.
-    + date: start_date for data extraction of given indicator.
+    + pairs: Exchange Rate Currencies (ej. USDMXN, EURUSD)
+    + account: Valid Mt5 username credential. (64225494)
+    + pw: Valid Mt5 password credential. (movz2vvi)
+    + timeframe: Data download temporality: 10M, 30M, H1, H4, D1 (str). 
     -------
-    Returns: Historic data with OHCLV, spread and real_volume cols. (dataframe).
+    Returns: Returns OHCLV, spreads and Real Volume for selected timeframes (dataframe).
     """
     #MT5 data download
     mt5.initialize(login = account, server = 'MetaQuotes-Demo', password = pw)
@@ -66,7 +67,19 @@ def fx_rate(pairs, account, pw):
     utc_from = datetime(2018, 1, 1, tzinfo=timezone) #'datetime' object in UTC time zone to avoid local time offset.
     utc_to = datetime(2020, 3, 1, tzinfo=timezone)
     # get 10 EURUSD H4 bars starting from 01.10.2020 in UTC time zone
-    rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_M30, utc_from, utc_to)
+
+    if timeframe == "10M":
+        rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_M10, utc_from, utc_to)
+    if timeframe == "30M":
+        rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_M30, utc_from, utc_to)
+    elif timeframe == "H1":
+        rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_H1, utc_from, utc_to)
+    elif timeframe == "H4":
+        rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_H4, utc_from, utc_to)
+    elif timeframe == "D1":
+        rates = mt5.copy_rates_range(pairs, mt5.TIMEFRAME_D1, utc_from, utc_to)
+    else: "Only 30M, H1, H4, D1 timeframe string values are recognized by this function."
+    
     mt5.shutdown() # Shut down connection to Mt5
     rates_frame = pd.DataFrame(rates) #Create df with data
     rates_frame['time']=pd.to_datetime(rates_frame['time'], unit='s') #Convert time to datetime with secs format,

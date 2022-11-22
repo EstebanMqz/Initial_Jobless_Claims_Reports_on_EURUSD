@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go #plotly
+from plotly.subplots import make_subplots 
 import warnings
 import time 
 import plotly.express as px
@@ -85,4 +86,88 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     return fig.show()
 
 
+
+def plotly_graph(x, y, name, x_label, y_label, title):
+    """
+    Function that plots a one-trace line+marker graph with plotly for gral. time-series.
+
+        Parameters
+        ----------
+        x: Datetime values should be set as index for plotly chart. 
+        y: Values present in dataframe cols. 
+        name: Label of y trace (str). 
+        x_label: xlabel for plot (str). 
+        y_label: y_label for plot (str).          
+        title: Title of the plot (str). 
+        Returns
+        -------
+        Returns a one-trace line+marker graph with plotly for gral. time-series analysis.
+    """
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=x,y=y,mode='lines',name=name,line=dict(color='blue')))
+    fig.add_hline(y=1, line_dash="dash", line_width=2, line_color="darkred")
+    fig.update_layout(title=title, xaxis_title=x_label, yaxis_title=y_label)
+    fig.update_xaxes(showspikes=True)
+    fig.update_yaxes(showspikes=True)
+
+    return fig.show()
+
+def OHCLV_csticks(fx_rates, title_1, title_2, n):
+    """
+    Function that plots candlesticks, BB and MA for the given stock/forex with given temporality in dataframe (fx_rates).
+
+        Parameters
+        ----------
+        fx_rates: fx_rates with OHLCV (dataframe).
+        title_1: Upper subplot title (str). 
+        title_2: Lower subplot title (str). 
+
+        Returns
+        -------
+        Returns candlesticks time-series with Moving Average in n-windows, Bollinger Bands (n-window dependent) and Volumes.
+    """
+    fx_rates['sma'] = fx_rates['close'].rolling(n).mean()
+    fx_rates['std'] = fx_rates['close'].rolling(n).std(ddof = 0)
+
+    fig = make_subplots(rows = 2, cols = 1, shared_xaxes = False, 
+    subplot_titles = (title_1, title_2), vertical_spacing = 0.1, row_width = [0.2, 1])
+
+    # Upper Bound
+    fig.add_trace(go.Scatter(x = fx_rates['time'],
+                            y = fx_rates['sma'] + (fx_rates['std'] * 2),
+                            line_color = 'black',
+                            line = {'dash': 'dash'},
+                            name = 'outer', showlegend=True,
+                            opacity = 0.3),
+                row = 1, col = 1)
+                
+    # Moving Average (n~Windows)
+    fig.add_trace(go.Scatter(x = fx_rates['time'],
+                        y = fx_rates['sma'],
+                        line_color = 'black', showlegend=True,
+                        name = 'sma'),
+                row = 1, col = 1)
     
+    # Candlestick Plot
+    fig.add_trace(go.Candlestick(x = fx_rates['time'],
+                                open = fx_rates['open'],
+                                high = fx_rates['high'],
+                                low = fx_rates['low'],
+                                close = fx_rates['close'], showlegend=True,
+                                name = 'candlesticks'),
+                row = 1, col = 1)
+
+    # Lower Bound 
+    fig.add_trace(go.Scatter(x = fx_rates['time'],
+                            y = fx_rates['sma'] - (fx_rates['std'] * 2),
+                            line_color = 'purple',
+                            line = {'dash': 'dash'},
+                            name = 'bands', showlegend=True,
+                            opacity = 0.3),
+                row = 1, col = 1)
+    
+    # Volume Plot
+    fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
+                row = 2, col = 1)
+
+    return fig.show()
