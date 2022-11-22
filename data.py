@@ -29,7 +29,8 @@ def read_indicator(indicator,date):
     Parameters
     ----------
     + indicator: Economic indicator contained in files with Datetime,
-    Actual, Previous and Consensus estimates values in cols (string).
+    Actual, Previous and Consensus estimates va
+    lues in cols (string).
     + date: start_date for data extraction of given indicator ('YYYY-MM-DD').
     -------
     Returns: Historic data with Datetime, Actual, Previous and Consensus 
