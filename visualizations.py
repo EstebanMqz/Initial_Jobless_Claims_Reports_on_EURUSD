@@ -170,4 +170,4 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show()
+    return fig.show("png")
