@@ -11,6 +11,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import kaleido
 import plotly.graph_objects as go #plotly
 from plotly.subplots import make_subplots 
 import warnings
@@ -53,7 +54,7 @@ def plotly_graph2(x, y1, y2, name1, name2, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()
+    return fig.show(), fig.show("png")
 
 
 def plotly_graph1(x, y, name, x_label, y_label, title):
@@ -83,7 +84,7 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()
+    return fig.show(), fig.show("png")
 
 
 
@@ -110,7 +111,7 @@ def plotly_graph(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()
+    return fig.show(), fig.show("png")
 
 def OHCLV_csticks(fx_rates, title_1, title_2, n):
     """
@@ -170,4 +171,5 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show("png")
+    return fig.show(), fig.show("png")
+    

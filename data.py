@@ -11,6 +11,7 @@ from os import listdir
 from os.path import isfile, join
 import pandas as pd
 import functions as fn
+import kaleido
 from datetime import datetime
 from datetime import datetime, timedelta, date
 import MetaTrader5 as mt5
