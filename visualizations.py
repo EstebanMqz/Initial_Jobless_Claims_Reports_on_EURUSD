@@ -84,7 +84,7 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()#, fig.show("png")
+    return fig.show("png")#, fig.show("png")
 
 
 
@@ -111,7 +111,7 @@ def plotly_graph(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()#, fig.show("png")
+    return fig.show("png")#, fig.show("png")
 
 def OHCLV_csticks(fx_rates, title_1, title_2, n):
     """
@@ -121,17 +121,18 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
         ----------
         fx_rates: fx_rates with OHLCV (dataframe).
         title_1: Upper subplot title (str). 
-        title_2: Lower subplot title (str). 
+        title_2: Lower subplot title (str).
+        n: MA & Std. ~ Window (default = 30)
 
         Returns
         -------
-        Returns candlesticks time-series with Moving Average in n-windows, Bollinger Bands (n-window dependent) and Volumes.
+        Returns candlesticks time-series with Moving Average (n ~ window), Bollinger Bands (n ~ Window) and Volumes.
     """
     fx_rates['sma'] = fx_rates['close'].rolling(n).mean()
     fx_rates['std'] = fx_rates['close'].rolling(n).std(ddof = 0)
 
     fig = make_subplots(rows = 2, cols = 1, shared_xaxes = False, 
-    subplot_titles = (title_1, title_2), vertical_spacing = 0.1, row_width = [0.2, 1])
+    subplot_titles = (title_1, title_2), vertical_spacing = 0.5, row_width = [0.2, 1])
 
     # Upper Bound
     fig.add_trace(go.Scatter(x = fx_rates['time'],
@@ -171,7 +172,7 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show()#, fig.show("png")
+    return fig.show("png")#, fig.show("png")
 
 
 def indicator_scenarios(indicator, title):
@@ -194,7 +195,7 @@ def indicator_scenarios(indicator, title):
     Actual = Actual.sort_values(by=['Counter'], ascending=False) 
     fig = px.histogram(indicator, x="Case", title=title, color='Case')
 
-    fig.show()#, fig.show("png") #hist
+    fig.show("png")#, fig.show("png") #hist
     return Actual #df
 
 

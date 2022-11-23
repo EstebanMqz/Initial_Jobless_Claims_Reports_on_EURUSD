@@ -7,10 +7,10 @@
 # -- repository: https://github.com/EstebanMqz/MyST_LAB_4/blob/main/main.py                                                     -- #
 # -- ------------------------------------------------------------------------------------------------------------------------   -- #
 """
-import chart_studio.plotly as py   # various tools (jupyter offline print)
-import plotly.graph_objects as go  # plotting engine
-import plotly.io as pio            # to define input-output of plots
-pio.renderers.default = "browser"  # to render the plot locally in your default web browser
+import chart_studio.plotly as py   
+import plotly.graph_objects as go  
+import plotly.io as pio            
+pio.renderers.default = "browser"  
 import functions as fn
 import visualizations as vs
 import data as dt
