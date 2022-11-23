@@ -54,7 +54,7 @@ def plotly_graph2(x, y1, y2, name1, name2, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(), fig.show("png")
+    return fig.show()#, fig.show("png")
 
 
 def plotly_graph1(x, y, name, x_label, y_label, title):
@@ -84,7 +84,7 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(), fig.show("png")
+    return fig.show()#, fig.show("png")
 
 
 
@@ -111,7 +111,7 @@ def plotly_graph(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(), fig.show("png")
+    return fig.show()#, fig.show("png")
 
 def OHCLV_csticks(fx_rates, title_1, title_2, n):
     """
@@ -171,5 +171,32 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show(), fig.show("png")
-    
+    return fig.show()#, fig.show("png")
+
+
+def indicator_scenarios(indicator, title):
+    """
+    Function that plots an histogram of Case Scenarios and a Counter dataframe for Type 
+    of operations executed assuming the plotted scenarios.
+
+        Parameters
+        ----------
+        indicator: Economic indicator with added cols. Case scenarios and Type (Buy or Sell) as (dataframe).
+        title: Plot title (str). 
+
+        Returns
+        -------
+        Returns histogram of scenarios and a dataframe of type of operations.
+    """
+    Cases = indicator.groupby('Operation') 
+    Actual = pd.DataFrame(Cases['Operation'].count()) 
+    Actual.rename(columns = {'Operation':'Counter', 'Cases': 'Cases'}, inplace = True) 
+    Actual = Actual.sort_values(by=['Counter'], ascending=False) 
+    fig = px.histogram(indicator, x="Case", title=title, color='Case')
+
+    fig.show()#, fig.show("png") #hist
+    return Actual #df
+
+
+
+
