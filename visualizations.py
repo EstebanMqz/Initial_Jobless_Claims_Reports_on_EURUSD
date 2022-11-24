@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import kaleido
 import plotly.graph_objects as go #plotly
+from statsmodels.tsa.stattools import pacf
+from statsmodels.tsa.stattools import acf
 from plotly.subplots import make_subplots 
 import warnings
 import time 
@@ -54,7 +56,7 @@ def plotly_graph2(x, y1, y2, name1, name2, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(),fig.show("png")
+    return fig.show()#,fig.show("png")
 
 
 def plotly_graph1(x, y, name, x_label, y_label, title):
@@ -84,7 +86,7 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(),fig.show("png")
+    return fig.show()#,fig.show("png")
 
 
 
@@ -111,7 +113,7 @@ def plotly_graph(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show(),fig.show("png")
+    return fig.show()#,fig.show("png")
 
 def OHCLV_csticks(fx_rates, title_1, title_2, n):
     """
@@ -172,7 +174,7 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show(),fig.show("png")
+    return fig.show()#,fig.show("png")
 
 
 def indicator_scenarios(indicator, title):
@@ -195,8 +197,42 @@ def indicator_scenarios(indicator, title):
     Actual = Actual.sort_values(by=['Counter'], ascending=False) 
     fig = px.histogram(indicator, x="Case", title=title, color='Case')
 
-    fig.show(), fig.show("png")
-    return Actual 
+    fig.show()#, fig.show("png")
+    return Actual
+
+def create_corr_plot(index, plot_pacf=False):
+    """
+    Function that plots lines+marker AutoCorrelation and Partial AutoCorrelation 
+    plot intended to model economic index Actual values.
+
+        Parameters
+        ----------
+        index: Actual values from economic index (col) 
+
+        Returns
+        -------
+        lines+marker AutoCorrelation and Partial AutoCorrelation 
+        plots in a didactic graph with plotly.
+    """
+    corr_array = pacf(index.dropna(), alpha=0.05) if plot_pacf else acf(index.dropna(), alpha=0.05)
+    lower_y = corr_array[1][:,0] - corr_array[0]
+    upper_y = corr_array[1][:,1] - corr_array[0]
+
+    fig = go.Figure()
+    [fig.add_scatter(x=(x,x), y=(0,corr_array[0][x]), mode='lines+markers',line_color='#3f3f3f') 
+     for x in range(len(corr_array[0]))]
+    fig.add_scatter(x=np.arange(len(corr_array[0])), y=corr_array[0], mode='markers', marker_color='#1f77b4',
+                   marker_size=4)
+
+    fig.add_scatter(x=np.arange(len(corr_array[0])), y=upper_y, mode='lines', line_color='rgba(255,255,255,0)')
+    fig.add_scatter(x=np.arange(len(corr_array[0])), y=lower_y, mode='lines',fillcolor='rgba(32, 146, 230,0.3)',
+            fill='tonexty', line_color='rgba(255,255,255,0)')
+    fig.update_traces(showlegend=False)
+    fig.update_yaxes(zerolinecolor='black')
+    
+    title='Partial Autocorrelation (PACF)' if plot_pacf else 'Autocorrelation (ACF)'
+    fig.update_layout(title=title)
+    fig.show()
 
 
 
