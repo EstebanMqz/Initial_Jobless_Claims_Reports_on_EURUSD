@@ -19,6 +19,8 @@ from plotly.subplots import make_subplots
 import warnings
 import time 
 import plotly.express as px
+import statsmodels.api as sm #qq plot
+import pylab
 
 
 pd.set_option('display.max_rows', None)
@@ -202,7 +204,7 @@ def indicator_scenarios(indicator, title):
 
 def create_corr_plot(index, plot_pacf=False):
     """
-    Function that plots lines+marker AutoCorrelation and Partial AutoCorrelation 
+    Function that graphs lines+marker AutoCorrelation and Partial AutoCorrelation 
     plot intended to model economic index Actual values.
 
         Parameters
@@ -233,6 +235,21 @@ def create_corr_plot(index, plot_pacf=False):
     title='Partial Autocorrelation (PACF)' if plot_pacf else 'Autocorrelation (ACF)'
     fig.update_layout(title=title)
     fig.show()
+
+def qq(index):
+    """
+    Function that graphs a QQ-plot intended to model economic index Actual values.
+
+        Parameters
+        ----------
+        index: Actual values from economic index (col) 
+
+        Returns
+        -------
+        QQ-plot for given data.
+    """
+    sm.qqplot(index, line= 'q', fit  = True)
+    pylab.show()    
 
 
 
