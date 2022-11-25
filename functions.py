@@ -42,16 +42,18 @@ def case_operation(data_raw):
         elif data_raw.Actual[i] < data_raw.Consensus[i] and data_raw.Consensus[i] < data_raw.Previous[i]:
             data_raw.Case.iloc[i] = 'D'
 
-    data_raw['Operation']= ''
+    data_raw['EURUSD']= ''
     for i in range(len(data_raw)):
         if data_raw.Case[i] == 'A' or data_raw.Case[i] == 'B':
-            data_raw.Operation[i] = 'Sell'
+            data_raw.EURUSD[i] = 'Buy'
         elif data_raw.Case[i] == 'C' or data_raw.Case[i] == 'D':
-            data_raw.Operation[i] = 'Buy'
+            data_raw.EURUSD[i] = 'Sell'
         else:
-            data_raw.Operation[i] = 'NA'
+            data_raw.EURUSD[i] = 'NA'
             
     return data_raw
+
+
 
 
 

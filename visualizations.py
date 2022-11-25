@@ -195,12 +195,11 @@ def indicator_scenarios(indicator, title):
         -------
         Returns histogram of scenarios and a dataframe of type of operations.
     """
-    Cases = indicator.groupby('Operation') 
-    Actual = pd.DataFrame(Cases['Operation'].count()) 
-    Actual.rename(columns = {'Operation':'Counter', 'Cases': 'Cases'}, inplace = True) 
+    Cases = indicator.groupby('EURUSD') 
+    Actual = pd.DataFrame(Cases['EURUSD'].count()) 
+    Actual.rename(columns = {'EURUSD':'Counter', 'Cases': 'Cases'}, inplace = True) 
     Actual = Actual.sort_values(by=['Counter'], ascending=False) 
     fig = px.histogram(indicator, x="Case", title=title, color='Case')
-
     fig.show()#, fig.show("png")
     return Actual
 
@@ -294,7 +293,28 @@ def Stationarity(x, y, n):
 
     fig.show()
    
-    return "p-value:", adfuller(y)[1]
+    return "p-value:", adfuller(y)[1], 
+
+
+def Box(data, y, title):
+    """
+    Function that plots a box and whisker plot for data.
+
+        Parameters
+        ----------
+        data: Economic index data with previous, actual and consensus as (col).
+        y: Actual values from economic index (col). 
+        title: Title (str). 
+
+        Returns
+        -------
+        Didactic box and whisker plot to detect outliers.
+    """
+
+    fig = px.box(data, y=y, points="all")
+    fig.update_layout(title=title, yaxis_title="Values")
+    
+    return fig.show()
 
 
     
