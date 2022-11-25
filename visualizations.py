@@ -15,6 +15,8 @@ import kaleido
 import plotly.graph_objects as go #plotly
 from statsmodels.tsa.stattools import pacf
 from statsmodels.tsa.stattools import acf
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
 from plotly.subplots import make_subplots 
 import warnings
 import time 
@@ -252,5 +254,47 @@ def qq(index):
     pylab.show()    
 
 
+def Stationarity(x, y, n):
+    """
+    Function that plots a time-series and its Trend, Seasonality and Residuals 
+    returning the Augmented Dickey Fuller p-value for given n periods.
+
+        Parameters
+        ----------
+        x: DateTime values from economic index (col). #data_raw['DateTime']
+        y: Actual values from economic index (col). #data_raw['Actual']
+        n: Periods for decomposition (int).
+
+        Returns
+        -------
+        lines+marker Series, Trend, Seasonality and Residuals plots in a didactic graph with plotly.
+    """
+
+    decomposition = seasonal_decompose(y, period = n)
+
+    trend = decomposition.trend
+    seasonal = decomposition.seasonal
+    residual = decomposition.resid
+
+    fig = make_subplots(rows = 4, cols = 1, shared_xaxes = False, 
+                        subplot_titles = ('Actual', 'Trend', 'Seasonal', 'Residuals'),
+                        vertical_spacing = 0.15, row_width = [0.25, 0.25, 0.25, 0.25])
+
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Actual',
+         line=dict(color='black'), marker=dict(symbol=2, color='black')))
+
+    fig.add_trace(go.Scatter(x=x, y=trend, mode='lines+markers', name='Trend',
+         line=dict(color='black'), marker=dict(symbol=2, color='blue')), row = 2, col = 1)
+
+    fig.add_trace(go.Scatter(x=x, y=seasonal, mode='lines+markers', name='Seasonal',
+         line=dict(color='black'), marker=dict(symbol=2, color='green')), row = 3, col = 1)
+
+    fig.add_trace(go.Scatter(x=x, y=residual, mode='lines+markers', name='Residuals',
+         line=dict(color='black'), marker=dict(symbol=2, color='gray')), row = 4, col = 1)
+
+    fig.show()
+   
+    return "p-value:", adfuller(y)[1]
 
 
+    
