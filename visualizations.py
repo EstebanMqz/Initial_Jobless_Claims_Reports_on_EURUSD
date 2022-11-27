@@ -60,7 +60,7 @@ def plotly_graph2(x, y1, y2, name1, name2, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()#,fig.show("png")
+    return fig.show(),fig.show("png")
 
 
 def plotly_graph1(x, y, name, x_label, y_label, title):
@@ -84,13 +84,13 @@ def plotly_graph1(x, y, name, x_label, y_label, title):
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers',
     name=name, line=dict(color='black'), marker=dict(symbol=2, color='yellow')))
     fig.add_hline(y=0, line_dash="dash", line_width=3, line_color="darkred")
-    fig.add_hrect(y0=0, y1=45, line_width=0, fillcolor="red", opacity=0.15)
-    fig.add_hrect(y0=0, y1=-35, line_width=0, fillcolor="green", opacity=0.15)
+    fig.add_hrect(y0=0, y1=y.max(), line_width=0, fillcolor="red", opacity=0.15)
+    fig.add_hrect(y0=0, y1=y.min(), line_width=0, fillcolor="green", opacity=0.15)
     fig.update_layout(title=title, xaxis_title=x_label, yaxis_title=y_label)
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()#,fig.show("png")
+    return fig.show(),fig.show("png")
 
 
 
@@ -117,7 +117,7 @@ def plotly_graph(x, y, name, x_label, y_label, title):
     fig.update_xaxes(showspikes=True)
     fig.update_yaxes(showspikes=True)
 
-    return fig.show()#,fig.show("png")
+    return fig.show(),fig.show("png")
 
 def OHCLV_csticks(fx_rates, title_1, title_2, n):
     """
@@ -178,7 +178,7 @@ def OHCLV_csticks(fx_rates, title_1, title_2, n):
     fig.add_trace(go.Bar(x = fx_rates['time'], y = fx_rates['tick_volume'], showlegend=False), 
                 row = 2, col = 1)
 
-    return fig.show()#,fig.show("png")
+    return fig.show(),fig.show("png")
 
 
 def indicator_scenarios(indicator, title):
@@ -200,7 +200,7 @@ def indicator_scenarios(indicator, title):
     Actual.rename(columns = {'EURUSD':'Counter', 'Cases': 'Cases'}, inplace = True) 
     Actual = Actual.sort_values(by=['Counter'], ascending=False) 
     fig = px.histogram(indicator, x="Case", title=title, color='Case')
-    fig.show()#, fig.show("png")
+    fig.show(), fig.show("png")
     return Actual
 
 def create_corr_plot(index, plot_pacf=False):
@@ -235,7 +235,7 @@ def create_corr_plot(index, plot_pacf=False):
     
     title='Partial Autocorrelation (PACF)' if plot_pacf else 'Autocorrelation (ACF)'
     fig.update_layout(title=title)
-    fig.show()
+    fig.show(),fig.show("png")
 
 def qq(index):
     """
@@ -291,7 +291,7 @@ def Stationarity(x, y, n):
     fig.add_trace(go.Scatter(x=x, y=residual, mode='lines+markers', name='Residuals',
          line=dict(color='black'), marker=dict(symbol=2, color='gray')), row = 4, col = 1)
 
-    fig.show()
+    fig.show(),fig.show("png")
    
     return "p-value:", adfuller(y)[1], 
 
@@ -314,7 +314,7 @@ def Box(data, y, title):
     fig = px.box(data, y=y, points="all")
     fig.update_layout(title=title, yaxis_title="Values")
     
-    return fig.show()
+    return fig.show(),fig.show("png")
 
 
     
